@@ -1,0 +1,29 @@
+global:
+#  image: "hashicorp/consul:1.13.1"
+  image: "ghcr.io/erichaberkorn/consul:latest"
+  peering:
+    enabled: true
+  imageK8S: "ghcr.io/erichaberkorn/consul-k8s-control-plane-dev:latest"
+  
+server:
+ replicas: 1
+ bootstrapExpect: 1
+ extraConfig: |
+   {
+     "log_level": "TRACE"
+   }
+connectInject:
+  enabled: true
+
+meshGateway:
+  enabled: true
+  replicas: 1
+
+controller:
+  enabled: true
+
+ui:
+  enabled: true
+  service:
+    enabled: true
+    type: LoadBalancer

@@ -1,0 +1,16 @@
+{
+    "ConnectTimeout": "15s",
+    "Kind": "service-resolver",
+    "Name": "counting",
+    "Failover": {
+        "*": {
+            "Targets": [
+                {
+                    "Peer": "dc2"
+                }
+            ]
+        }
+    },
+    "CreateIndex": 250,
+    "ModifyIndex": 250
+}
