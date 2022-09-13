@@ -1,11 +1,11 @@
 # cluster-peering-failover-demo
 
-This demo will showcase teh ability to failover services between two Consul datacenters that have been connected via Cluster peering. 
-We will deploy the counting app where dashboard service will connect to the upstream counting service. Both services will reside on dc1.
+This demo will showcase the ability to failover services between two Consul datacenters (dc1 and dc2) that have been connected via Cluster peering. 
+We will deploy a counting app where a dashboard service will connect to the upstream counting service. Both services will reside on dc1.
 
-We will have another counting service running on dc2. We will similate a failure of the counting service on dc1 by taking down the whole counting service deployment. 
+We will have another instance of the counting service running on dc2. We will similate a failure of the counting service on dc1 by taking down the whole counting service deployment. 
 
-We will then observe that the dashboard will failover to the counting service residing on dc2.
+We will then observe how the dashboard will failover to the counting service residing on dc2.
 
 ![alt text](https://github.com/vanphan24/cluster-peering-demo/blob/main/images/Screen%20Shot%202022-08-18%20at%2010.40.40%20AM.png "Cluster Peering Demo")
 
@@ -140,7 +140,16 @@ kubectl apply -f  dialer-dc2.yaml --context dc2
 kubectl apply -f exportedsvc-counting.yaml --context dc2
 ```
 
-17. Apply service-resolver. This file will tell Consul how to handle failovers if the counting service fails locally.
+17. Retrieve the Consul public IP address on dc1 and put into an environmental variable
+
 ```
-kubectl apply -f service-resolver.yaml --context dc1
+ export CONSUL_PUB_IP=$(kubectl get service dc1-consul-expose-servers -o jsonpath='{.status.loadBalancer.ingress[0].ip}' --context dc1)
+```
+
+18. Apply service-resolver.json file using the HTTP API. This service-resolver.json file will tell Consul how to handle failovers if the counting service fails locally. The IP address used if 
+```
+curl \                                       
+--request PUT \
+--data @service-resolver.json \
+http://$CONSUL_PUB_IP:8500/v1/config
 ```
