@@ -57,7 +57,7 @@ cd cluster-peering-failover-demo/countingapp
 
 ```
 kubectl config use-context dc1
-helm install dc1 ../charts/consul --values consul-values.yaml                                  
+helm install dc1 ../../charts/consul --values consul-values.yaml                                  
 ```
 
 6. Confirm Consul deployed sucessfully
@@ -95,7 +95,7 @@ kubectl get service dashboard --context dc1
 
 ```
 kubectl config use-context dc2
-helm install dc2 ../charts/consul --values consul-values.yaml      
+helm install dc2 ../../charts/consul --values consul-values.yaml      
 ```
 
 11. Deploy counting service on dc2. This will be the failover service instance.
