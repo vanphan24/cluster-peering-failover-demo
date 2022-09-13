@@ -148,8 +148,5 @@ kubectl apply -f exportedsvc-counting.yaml --context dc2
 
 18. Apply service-resolver.json file using the HTTP API. This service-resolver.json file will tell Consul how to handle failovers if the counting service fails locally. The IP address used if 
 ```
-curl \                                       
---request PUT \
---data @service-resolver.json \
-http://$CONSUL_PUB_IP:8500/v1/config
+curl --request PUT --data @service-resolver.json http://$CONSUL_PUB_IP:8500/v1/config
 ```
