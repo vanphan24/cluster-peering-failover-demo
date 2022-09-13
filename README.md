@@ -47,10 +47,10 @@ cd consul-k8s
 git clone https://github.com/vanphan24/cluster-peering-failover-demo.git
 ```
 
-4. Nagivate to the **cluster-peering-failover-demo** folder. 
+4. Nagivate to the **cluster-peering-failover-demo/countingapp** folder. 
 
 ```
-cd cluster-peering-failover-demo
+cd cluster-peering-failover-demo/countingapp
 ```
 
 5. Set context and deploy Consul on dc1
@@ -77,8 +77,8 @@ dc1-consul-webhook-cert-manager-669bb6d774-sb5lz   1/1     Running   0          
 
 8. Deploy both dashboard and counting service on dc1
 ```
-kubectl apply -f countingapp/dashboard.yaml --context dc1
-kubectl apply -f countingapp/counting.yaml --context dc1
+kubectl apply -f dashboard.yaml --context dc1
+kubectl apply -f counting.yaml --context dc1
 ```
 
 9. Using your browser, check the dashboard UI and confirm the number displayed is incrementing. Append port :9002 to the browser URL.  
@@ -88,7 +88,7 @@ kubectl get service dashboard --context dc1
 ```
 
 
-**Deploy Consul on dc2** 
+# Deploy Consul on dc2 
 
 
 10. Set context and deploy Consul on dc2
@@ -98,14 +98,14 @@ kubectl config use-context dc2
 helm install dc2 ../charts/consul --values consul-values.yaml      
 ```
 
-11. Deploy counting service on dc2. This will be the failover service
+11. Deploy counting service on dc2. This will be the failover service instance.
 
 ```
-kubectl apply -f countingapp/counting.yaml --context dc2
+kubectl apply -f counting.yaml --context dc2
 ```
 
 
-**Create cluster peering connection**
+# Create cluster peering connection
 
 12. Create Peering Acceptor on dc1 using the provided acceptor-for-dc2.yaml file.
 Note: This step will establish dc1 as the Acceptor.
