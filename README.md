@@ -105,7 +105,7 @@ kubectl apply -f countingapp/counting.yaml --context dc2
 ```
 
 
-**Create cluster peering connection **
+**Create cluster peering connection**
 
 12. Create Peering Acceptor on dc1 using the provided acceptor-for-dc2.yaml file.
 Note: This step will establish dc1 as the Acceptor.
@@ -132,4 +132,15 @@ kubectl get secret peering-token-dc2 --context dc1 -o yaml | kubectl apply --con
 Note: This step will establish dc2 as the Dialer and will connect Consul on dc2 to Consul on dc1 using the peering-token.
 ```
 kubectl apply -f  dialer-dc2.yaml --context dc2
+```
+
+16. Export counting service from dc2 to dc1.
+
+```
+kubectl apply -f exportedsvc-counting.yaml --context dc2
+```
+
+17. Apply service-resolver. This file will tell Consul how to handle failovers if the counting service fails locally.
+```
+kubectl apply -f service-resolver.yaml --context dc1
 ```
