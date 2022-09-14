@@ -33,7 +33,7 @@ Note: In our example, we will name our Kubernetes clusters **dc1** and **dc2**.
 
 1. Clone consul-k8s git repo
 ```
-git clone https://github.com/hashicorp/consul-k8s.git
+git clone https://github.com/hashicorp/consul-k8s.git  -b update-service-resolver-crd
 ```
 
 2. Nagivate to the **consul-k8s** folder. 
