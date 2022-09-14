@@ -163,6 +163,9 @@ kubectl delete -f counting.yaml --context dc1
 
 ![alt text](https://github.com/vanphan24/cluster-peering-failover-demo/blob/main/images/dashboard-failover.png)
 
+**This is your current configuration:**  
+![alt text](https://github.com/vanphan24/cluster-peering-failover-demo/blob/main/images/Screen%20Shot%202022-09-13%20at%205.13.46%20PM.png "Cluster Peering Demo")
+
 
 19. Bring counting service on dc1 back up.
 ```
