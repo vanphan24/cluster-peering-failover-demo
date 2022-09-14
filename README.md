@@ -150,3 +150,21 @@ kubectl apply -f exportedsvc-counting.yaml --context dc2
 ```
 curl --request PUT --data @service-resolver.json http://$CONSUL_PUB_IP:8500/v1/config
 ```
+
+19. Delete the counting service on dc1
+```
+kubectl delete -f counting.yaml --context dc1
+```
+
+20. Observe the dashboard service on your browser. You should notice that the counter has restarted since the dashboard is connecting to different counting service instance.
+
+21. Bring counting service on dc1 back up.
+```
+kubectl apply -f counting.yaml --context dc1
+```
+
+
+22. Observe the dashboard service on your browser. Notice the the dashboard URL shows the coutner has restarted again since it automatically fails back to the original service on dc1.
+
+
+
