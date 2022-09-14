@@ -149,34 +149,28 @@ kubectl apply -f  dialer-dc2.yaml --context dc2
 kubectl apply -f exportedsvc-counting.yaml --context dc2
 ```
 
-16. Retrieve the Consul public IP address on dc1 and put into an environmental variable
-
+16. Apply service-resolver file. This service-resolver.yaml file will tell Consul how to handle failovers if the counting service fails locally. 
 ```
- export CONSUL_PUB_IP=$(kubectl get service dc1-consul-expose-servers -o jsonpath='{.status.loadBalancer.ingress[0].ip}' --context dc1)
-```
-
-17. Apply service-resolver.json file using the HTTP API. This service-resolver.json file will tell Consul how to handle failovers if the counting service fails locally. The IP address used if 
-```
-curl --request PUT --data @service-resolver.json http://$CONSUL_PUB_IP:8500/v1/config
+kubectl apply -f service-resolver.yaml --context dc1
 ```
 
-18. Delete the counting service on dc1
+17. Delete the counting service on dc1
 ```
 kubectl delete -f counting.yaml --context dc1
 ```
 
-19. Observe the dashboard service on your browser. You should notice that the counter has restarted since the dashboard is connecting to different counting service instance.
+18. Observe the dashboard service on your browser. You should notice that the counter has restarted since the dashboard is connecting to different counting service instance.
 
 ![alt text](https://github.com/vanphan24/cluster-peering-failover-demo/blob/main/images/dashboard-failover.png)
 
 
-20. Bring counting service on dc1 back up.
+19. Bring counting service on dc1 back up.
 ```
 kubectl apply -f counting.yaml --context dc1
 ```
 
 
-21. Observe the dashboard service on your browser. Notice the the dashboard URL shows the coutner has restarted again since it automatically fails back to the original service on dc1.
+20. Observe the dashboard service on your browser. Notice the the dashboard URL shows the coutner has restarted again since it automatically fails back to the original service on dc1.
 
 
 
