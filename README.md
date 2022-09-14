@@ -87,6 +87,15 @@ kubectl apply -f counting.yaml --context dc1
 kubectl get service dashboard --context dc1
 ```
 
+Example:  
+
+![alt text](https://github.com/vanphan24/cluster-peering-failover-demo/blob/main/images/dashboard-beofre.png)
+
+
+**This is your current configuration:**  
+![alt text](https://github.com/vanphan24/cluster-peering-failover-demo/blob/main/images/diagram-before2.png)
+
+
 
 # Deploy Consul on second Kubernetes cluster (dc2).
 
