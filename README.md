@@ -173,7 +173,7 @@ kubectl apply -f counting.yaml --context dc1
 ```
 
 
-20. Observe the dashboard service on your browser. Notice the the dashboard URL shows the coutner has restarted again since it automatically fails back to the original service on dc1.
+20. Observe the dashboard service on your browser. Notice the the dashboard URL shows the counter has restarted again since it automatically fails back to the original service on dc1.
 
 
 
