@@ -81,8 +81,8 @@ kubectl apply -f dashboard.yaml --context dc1
 kubectl apply -f counting.yaml --context dc1
 ```
 
-8. Using your browser, check the dashboard UI and confirm the number displayed is incrementing. Append port :9002 to the browser URL.  
-   You can get the dashboard UI's EXTERNAL IP address with
+8. Using your browser, check the dashboard UI and confirm the number displayed is incrementing. 
+   You can get the dashboard UI's EXTERNAL IP address with command below. Make sure to append port :9002 to the browser URL.  
 ```   
 kubectl get service dashboard --context dc1
 ```
