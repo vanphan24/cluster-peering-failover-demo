@@ -7,7 +7,7 @@ We will have another instance of the counting service running on dc2. We will si
 
 We will then observe how the dashboard will failover to the counting service residing on dc2.
 
-![alt text](https://github.com/vanphan24/cluster-peering-demo/blob/main/images/Screen%20Shot%202022-08-18%20at%2010.40.40%20AM.png "Cluster Peering Demo")
+![alt text](https://github.com/vanphan24/cluster-peering-failover-demo/blob/main/images/Screen%20Shot%202022-09-13%20at%205.13.46%20PM.png "Cluster Peering Demo")
 
 # Pre-reqs
 
@@ -157,6 +157,9 @@ kubectl delete -f counting.yaml --context dc1
 ```
 
 20. Observe the dashboard service on your browser. You should notice that the counter has restarted since the dashboard is connecting to different counting service instance.
+
+![alt text](https://github.com/vanphan24/cluster-peering-failover-demo/blob/main/images/Screen%20Shot%202022-09-13%20at%205.13.46%20PM.png)
+
 
 21. Bring counting service on dc1 back up.
 ```
