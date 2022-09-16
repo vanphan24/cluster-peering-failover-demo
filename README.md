@@ -176,4 +176,86 @@ kubectl apply -f counting.yaml --context dc1
 20. Observe the dashboard service on your browser. Notice the the dashboard URL shows the counter has restarted again since it automatically fails back to the original service on dc1.
 
 
+# (Optional) Deploy Consul (dc3) on EKS Cluster and peer between dc1 as dc3.
+
+This portion is optional and assumes you already have an Elastic Kubernetes Service (EKS) cluster deployed on AWS.
+We will create a peering connection between dc1 and dc3 (on EKS) and failover the counting service to dc3.
+
+1. Connect your local terminal to your EKS cluster.
+
+```
+aws eks --region <your-aws-region> update-kubeconfig --name <your-eks-cluster-name>
+```
+
+2. Set environment variable for your dc3 context.  
+   Note: You can find your EKS context using ```kubectl config get-contexts```
+
+```
+export dc3=<your EKS cluster context>
+```
+
+3. Deploy Consul **dc3** onto your EKS clsuter.
+```
+helm install dc3 ../../charts/consul --values consul-values.yaml                                  
+```
+
+4. Create Peering Acceptor on dc1 using the provided acceptor-on-dc1-for-dc3.yaml file.
+```
+kubectl apply -f  dc3/acceptor-on-dc1-for-dc3.yaml --context dc1
+```
+
+5. Copy "peering-token-dc3" secret from dc1 to dc3
+```
+kubectl get secret peering-token-dc3 --context dc1 -o yaml | kubectl apply --context $dc3 -f -
+```
+
+6. Create Peering Dialer on dc3 using the provided dialer-dc3.yaml file. Note: This step will connect Consul on dc2 to Consul on dc1 using the peering-token
+```
+kubectl apply -f  dialer-dc3.yaml --context dc3
+```
+
+**Peering Connection is how established between dc1 and dc3**
+
+7. Deploy counting service on dc3.
+```
+kubectl apply -f counting.yaml --context $dc3
+```
+8. Export counting services from dc3 to dc1 using the same exportedsvc-backend.yaml file. This will allow the the counting service to be reachable by the dashboard service in dc1
+```
+kubectl apply -f exportedsvc-counting.yaml --context $dc3
+```
+
+9. Update the service-resolver and add dc3 as one of the failover targets.  
+   - Edit the service-resolver.yaml file by adding ```- peer: 'dc3'``` as one of the targets.
+
+It should look like this:
+```
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceResolver
+metadata:
+  name: counting
+spec:
+  connectTimeout: 15s
+  failover:
+    '*':
+      targets:
+        - peer: 'dc2'
+        - peer: 'dc3'
+```
+
+10. Apply the file to dc1
+```
+kubectl apply -f service-resolver.yaml --context dc1
+```
+
+11. Now let's test the failover by failing the counting service on both dc1 and dc2.
+```
+kubectl delete -f counting.yaml --context dc1
+kubectl delete -f counting.yaml --context dc2
+```
+
+12. Back on your browser, check the dashboard UI to see the counter has reset and is running.
+
+
+
 
