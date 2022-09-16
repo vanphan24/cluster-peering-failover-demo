@@ -216,7 +216,7 @@ kubectl get secret peering-token-dc3 --context dc1 -o yaml | kubectl apply --con
 
 6. Create Peering Dialer on dc3 using the provided dialer-dc3.yaml file. Note: This step will connect Consul on dc2 to Consul on dc1 using the peering-token
 ```
-kubectl apply -f  dialer-dc3.yaml --context dc3
+kubectl apply -f  dc3/dialer-dc3.yaml --context $dc3
 ```
 
 **Peering Connection is how established between dc1 and dc3**
