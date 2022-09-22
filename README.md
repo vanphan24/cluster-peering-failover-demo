@@ -183,7 +183,7 @@ This portion is optional if you want to failover to AWS Elastic Kubernetes Servi
 We will create a peering connection between dc1 and dc3 (on EKS) and failover the counting service to dc3.
 This portion assumes you already have an Elastic Kubernetes Service (EKS) cluster deployed on AWS.  
 
-![image](https://github.com/vanphan24/cluster-peering-failover-demo/blob/main/images/Screen%20Shot%202022-09-16%20at%201.44.33%20PM.png)
+![image](https://github.com/vanphan24/cluster-peering-failover-demo/blob/main/images/Screen%20Shot%202022-09-22%20at%2011.02.29%20AM.png)
 
 
 1. Connect your local terminal to your EKS cluster.
