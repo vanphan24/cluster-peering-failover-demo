@@ -33,6 +33,7 @@ spec:
       labels:
         app: counting
     spec:
+      serviceAccountName: counting
       containers:
       - name: counting
         image: hashicorp/counting-service:0.0.2
