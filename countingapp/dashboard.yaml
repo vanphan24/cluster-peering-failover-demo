@@ -37,6 +37,7 @@ spec:
       labels:
         app: dashboard
     spec:
+      serviceAccountName: dashboard
       containers:
       - name: dashboard
         image: hashicorp/dashboard-service:0.0.4
