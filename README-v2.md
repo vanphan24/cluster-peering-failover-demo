@@ -214,10 +214,16 @@ aws eks --region <your-aws-region> update-kubeconfig --name <your-eks-cluster-na
 export dc3=<your EKS cluster context>
 ```
 
-3. Deploy Consul **dc3** onto your EKS clsuter.
+3. Set context and deploy Consul **dc3** onto your EKS cluster.
+
 ```
-helm install dc3 ../../charts/consul --values consul-values.yaml                                  
+kubectl config use-context $dc3
+``` 
 ```
+helm install dc3 hashicorp/consul --version 1.0.0-beta3 --values consul-values.yaml --set global.datacenter=dc3
+```
+
+Note: Run ```kubectl get crd``` and make sure that exportedservices.consul.hashicorp.com, peeringacceptors.consul.hashicorp.com, and peeringdialers.consul.hashicorp.com  exist. If not, you need to delete consul and redeploy.
 
 4. Create Peering Acceptor on dc1 using the provided acceptor-on-dc1-for-dc3.yaml file.
 ```
