@@ -99,7 +99,7 @@ Example:
 kubectl config use-context dc2
 ```
 ```
-helm install dc2 hashicorp/consul --version 1.0.0-beta3 --values consul-values.yaml --set datacenter=dc2
+helm install dc2 hashicorp/consul --version 1.0.0-beta3 --values consul-values.yaml --set global.datacenter=dc2
 ```
 
 Note: Run ```kubectl get crd``` and make sure that exportedservices.consul.hashicorp.com, peeringacceptors.consul.hashicorp.com, and peeringdialers.consul.hashicorp.com  exist. If not, you need to delete consul and redeploy.
