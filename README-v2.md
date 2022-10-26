@@ -66,7 +66,7 @@ dc1-consul-mesh-gateway-747c58b75c-s68n7           2/2     Running   0          
 dc1-consul-server-0                                1/1     Running   0          2m
 dc1-consul-webhook-cert-manager-669bb6d774-sb5lz   1/1     Running   0          2m
 ```  
-
+Note: Run ```kubectl get crd``` and make sure that exportedservices.consul.hashicorp.com, peeringacceptors.consul.hashicorp.com, and peeringdialers.consul.hashicorp.com  exist. If not, you need to delete consul and redeploy.
 
 5. Deploy both dashboard and counting service on dc1
 ```
@@ -99,8 +99,10 @@ Example:
 kubectl config use-context dc2
 ```
 ```
-helm install dc2 hashicorp/consul --version 1.0.0-beta3 --values consul-values.yaml      
+helm install dc2 hashicorp/consul --version 1.0.0-beta3 --values consul-values.yaml --set datacenter=dc2
 ```
+
+Note: Run ```kubectl get crd``` and make sure that exportedservices.consul.hashicorp.com, peeringacceptors.consul.hashicorp.com, and peeringdialers.consul.hashicorp.com  exist. If not, you need to delete consul and redeploy.
 
 8. Deploy counting service on dc2. This will be the failover service instance.
 
