@@ -29,7 +29,7 @@ helm repo update hashicorp
 
   
 # Deploy Consul on first Kubernetes cluster (dc1).
-Note: In our example, we will name our Kubernetes clusters **dc1** and **dc2**.
+
 
 
 1. Clone this repo
