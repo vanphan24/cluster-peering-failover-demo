@@ -43,17 +43,24 @@ git clone https://github.com/vanphan24/cluster-peering-failover-demo.git
 cd cluster-peering-failover-demo/countingapp
 ```
 
-3. Set context and deploy Consul on dc1
+3. Set environemetal variables for kubernetes cluster dc1 and dc2
 
 ```
-kubectl config use-context dc1
+export dc1=<your-kubernetes context-for-dc1>
+export dc2=<your-kubernetes context-for-dc2>
+```
+
+4. Set context and deploy Consul on dc1
+
+```
+kubectl config use-context $dc1
 ``` 
 
 ```
-helm install dc1 hashicorp/consul --version 1.0.0-beta3 --values consul-values.yaml                                  
+helm install dc1 hashicorp/consul --version 1.0.0-beta3 --values ../consul-values.yaml                                  
 ```
 
-4. Confirm Consul deployed sucessfully
+5. Confirm Consul deployed sucessfully
 
 ```
 kubectl get pods --context dc1
@@ -68,16 +75,16 @@ dc1-consul-webhook-cert-manager-669bb6d774-sb5lz   1/1     Running   0          
 ```  
 Note: Run ```kubectl get crd``` and make sure that exportedservices.consul.hashicorp.com, peeringacceptors.consul.hashicorp.com, and peeringdialers.consul.hashicorp.com  exist. If not, you need to delete consul and redeploy.
 
-5. Deploy both dashboard and counting service on dc1
+6. Deploy both dashboard and counting service on dc1
 ```
-kubectl apply -f dashboard.yaml --context dc1
-kubectl apply -f counting.yaml --context dc1
+kubectl apply -f dashboard.yaml --context $dc1
+kubectl apply -f counting.yaml --context $dc1
 ```
 
-6. Using your browser, check the dashboard UI and confirm the number displayed is incrementing. 
+7. Using your browser, check the dashboard UI and confirm the number displayed is incrementing. 
    You can get the dashboard UI's EXTERNAL IP address with command below. Make sure to append port :9002 to the browser URL.  
 ```   
-kubectl get service dashboard --context dc1
+kubectl get service dashboard --context $dc1
 ```
 
 Example:  
@@ -93,21 +100,21 @@ Example:
 # Deploy Consul on second Kubernetes cluster (dc2).
 
 
-7. Set context and deploy Consul on dc2
+8. Set context and deploy Consul on dc2
 
 ```
-kubectl config use-context dc2
+kubectl config use-context $dc2
 ```
 ```
-helm install dc2 hashicorp/consul --version 1.0.0-beta3 --values consul-values.yaml --set global.datacenter=dc2
+helm install dc2 hashicorp/consul --version 1.0.0-beta3 --values ../consul-values.yaml --set global.datacenter=dc2
 ```
 
 Note: Run ```kubectl get crd``` and make sure that exportedservices.consul.hashicorp.com, peeringacceptors.consul.hashicorp.com, and peeringdialers.consul.hashicorp.com  exist. If not, you need to delete consul and redeploy.
 
-8. Deploy counting service on dc2. This will be the failover service instance.
+9. Deploy counting service on dc2. This will be the failover service instance.
 
 ```
-kubectl apply -f counting.yaml --context dc2
+kubectl apply -f counting.yaml --context $dc2
 ```
 
 
@@ -131,50 +138,65 @@ You can establish the peering connections using the Consul UI or using Kubernete
 
 **To establish the peered connection using Kubernetes CRDs, the steps are:
 
-9. Create Peering Acceptor on dc1 using the provided acceptor-for-dc2.yaml file.
-Note: This step will establish dc1 as the Acceptor.
+10. Configure both consul datacenters to use mesh gateway for peering connections.
+
 ```
-kubectl apply -f  acceptor-on-dc1-for-dc2.yaml --context dc1
+kubectl apply meshgw.yaml --context $dc1
+kubectl apply meshgw.yaml --context $dc2
 ```
 
-10. Notice this will create a CRD called peeringacceptors and a secret called peering-token-dc2.
+12. Create Peering Acceptor on dc1 using the provided acceptor-for-dc2.yaml file.
+Note: This step will establish dc1 as the Acceptor.
 ```
-kubectl get peeringacceptors --context dc1
+kubectl apply -f  acceptor-on-dc1-for-dc2.yaml --context $dc1
+```
+
+13. Notice this will create a CRD called peeringacceptors.
+```
+kubectl get peeringacceptors --context $dc1
 NAME   SYNCED   LAST SYNCED   AGE
 dc2    True     2m46s         2m47s
 ```
+
+Notice a secret called peering-token-dc2 is created.
 ```
-kubectl get secrets --context dc1
+kubectl get secrets --context $dc1
 ```
 
-13. Copy peering-token-dc2 from dc1 to dc2.
+14. Copy peering-token-dc2 from dc1 to dc2.
 ```
-kubectl get secret peering-token-dc2 --context dc1 -o yaml | kubectl apply --context dc2 -f -
+kubectl get secret peering-token-dc2 --context $dc1 -o yaml | kubectl apply --context $dc2 -f -
 ```
 
-14. Create Peering Dialer on dc2 using the provided dialer-dc2.yaml file.
+15. Create Peering Dialer on dc2 using the provided dialer-dc2.yaml file.
 Note: This step will establish dc2 as the Dialer and will connect Consul on dc2 to Consul on dc1 using the peering-token.
 ```
-kubectl apply -f  dialer-dc2.yaml --context dc2
+kubectl apply -f  dialer-dc2.yaml --context $dc2
 ```
 
-15. Export counting service from dc2 to dc1.
+16. Export counting service from dc2 to dc1.
 
 ```
-kubectl apply -f exportedsvc-counting.yaml --context dc2
+kubectl apply -f exportedsvc-counting.yaml --context $dc2
 ```
 
-16. Apply service-resolver file. This service-resolver.yaml file will tell Consul how to handle failovers if the counting service fails locally. 
+17. Apply intentions to allow dashboard in dc1 to talk to counting service in dc2
+
 ```
-kubectl apply -f service-resolver.yaml --context dc1
+kubectl apply -f intentions.yaml --context $dc2
 ```
 
-17. Delete the counting service on dc1
+18. Apply service-resolver file. This service-resolver.yaml file will tell Consul how to handle failovers if the counting service fails locally. 
 ```
-kubectl delete -f counting.yaml --context dc1
+kubectl apply -f service-resolver.yaml --context $dc1
 ```
 
-18. Observe the dashboard service on your browser. You should notice that the counter has restarted since the dashboard is connecting to different counting service instance.
+19. Delete the counting service on dc1
+```
+kubectl delete -f counting.yaml --context $dc1
+```
+
+20. Observe the dashboard service on your browser. You should notice that the counter has restarted since the dashboard is connecting to different counting service instance.
 
 ![alt text](https://github.com/vanphan24/cluster-peering-failover-demo/blob/main/images/dashboard-failover.png)
 
@@ -182,13 +204,13 @@ kubectl delete -f counting.yaml --context dc1
 ![alt text](https://github.com/vanphan24/cluster-peering-failover-demo/blob/main/images/Screen%20Shot%202022-09-13%20at%205.13.46%20PM.png "Cluster Peering Demo")
 
 
-19. Bring counting service on dc1 back up.
+21. Bring counting service on dc1 back up.
 ```
-kubectl apply -f counting.yaml --context dc1
+kubectl apply -f counting.yaml --context $dc1
 ```
 
 
-20. Observe the dashboard service on your browser. Notice the the dashboard URL shows the counter has restarted again since it automatically fails back to the original service on dc1.
+22. Observe the dashboard service on your browser. Notice the the dashboard URL shows the counter has restarted again since it automatically fails back to the original service on dc1.
 
 
 # (Optional) Deploy Consul (dc3) on EKS Cluster and peer between dc1 as dc3.
