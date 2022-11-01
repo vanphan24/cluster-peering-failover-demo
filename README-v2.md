@@ -48,6 +48,7 @@ cd cluster-peering-failover-demo/countingapp
 ```
 export dc1=<your-kubernetes context-for-dc1>
 export dc2=<your-kubernetes context-for-dc2>
+export VERSION=1.0.0
 ```
 
 4. Set context and deploy Consul on dc1
@@ -57,7 +58,7 @@ kubectl config use-context $dc1
 ``` 
 
 ```
-helm install dc1 hashicorp/consul --version 1.0.0-beta3 --values ../consul-values.yaml                                  
+helm install dc1 hashicorp/consul --version $VERSION --values ../consul-values.yaml                                  
 ```
 
 5. Confirm Consul deployed sucessfully
@@ -106,7 +107,7 @@ Example:
 kubectl config use-context $dc2
 ```
 ```
-helm install dc2 hashicorp/consul --version 1.0.0-beta3 --values ../consul-values.yaml --set global.datacenter=dc2
+helm install dc2 hashicorp/consul --version $VERSION --values ../consul-values.yaml --set global.datacenter=dc2
 ```
 
 Note: Run ```kubectl get crd``` and make sure that exportedservices.consul.hashicorp.com, peeringacceptors.consul.hashicorp.com, and peeringdialers.consul.hashicorp.com  exist. If not, you need to delete consul and redeploy.
@@ -242,7 +243,7 @@ export dc3=<your EKS cluster context>
 kubectl config use-context $dc3
 ``` 
 ```
-helm install dc3 hashicorp/consul --version 1.0.0-beta3 --values consul-values.yaml --set global.datacenter=dc3
+helm install dc3 hashicorp/consul --version $VERSION --values consul-values.yaml --set global.datacenter=dc3
 ```
 
 Note: Run ```kubectl get crd``` and make sure that exportedservices.consul.hashicorp.com, peeringacceptors.consul.hashicorp.com, and peeringdialers.consul.hashicorp.com  exist. If not, you need to delete consul and redeploy.
