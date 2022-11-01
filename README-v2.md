@@ -74,7 +74,12 @@ dc1-consul-mesh-gateway-747c58b75c-s68n7           2/2     Running   0          
 dc1-consul-server-0                                1/1     Running   0          2m
 dc1-consul-webhook-cert-manager-669bb6d774-sb5lz   1/1     Running   0          2m
 ```  
-Note: Run ```kubectl get crd``` and make sure that exportedservices.consul.hashicorp.com, peeringacceptors.consul.hashicorp.com, and peeringdialers.consul.hashicorp.com  exist. If not, you need to delete consul and redeploy.
+Note: Run ```kubectl get crd``` and make sure that exportedservices.consul.hashicorp.com, peeringacceptors.consul.hashicorp.com, and peeringdialers.consul.hashicorp.com  exist.    
+If not, you need to upgrade your helm deployment:
+    
+    ```
+    helm upgrade dc1 ../github-main/consul-k8s/charts/consul  --version $VERSION --values ../consul-values.yaml
+    ```
 
 6. Deploy both dashboard and counting service on dc1
 ```
