@@ -58,7 +58,7 @@ kubectl config use-context $dc1
 ``` 
 
 ```
-helm install dc1 hashicorp/consul --version $VERSION --values ../consul-values.yaml                                  
+helm install dc1 hashicorp/consul --version $VERSION --values consul-values.yaml                                  
 ```
 
 5. Confirm Consul deployed sucessfully
