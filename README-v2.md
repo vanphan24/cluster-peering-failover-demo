@@ -197,12 +197,17 @@ kubectl apply -f intentions.yaml --context $dc2
 kubectl apply -f service-resolver.yaml --context $dc1
 ```
 
-19. Delete the counting service on dc1
+19. If you have deny-all intentions set or if ACL's are enabled (which means deny-all intentions are enabled), set intentions using intention.yaml file.
+```
+kubectl apply -f intentions.yaml --context $dc2
+```
+
+20. Delete the counting service on dc1
 ```
 kubectl delete -f counting.yaml --context $dc1
 ```
 
-20. Observe the dashboard service on your browser. You should notice that the counter has restarted since the dashboard is connecting to different counting service instance.
+21. Observe the dashboard service on your browser. You should notice that the counter has restarted since the dashboard is connecting to different counting service instance.
 
 ![alt text](https://github.com/vanphan24/cluster-peering-failover-demo/blob/main/images/dashboard-failover.png)
 
@@ -210,13 +215,13 @@ kubectl delete -f counting.yaml --context $dc1
 ![alt text](https://github.com/vanphan24/cluster-peering-failover-demo/blob/main/images/Screen%20Shot%202022-09-13%20at%205.13.46%20PM.png "Cluster Peering Demo")
 
 
-21. Bring counting service on dc1 back up.
+22. Bring counting service on dc1 back up.
 ```
 kubectl apply -f counting.yaml --context $dc1
 ```
 
 
-22. Observe the dashboard service on your browser. Notice the the dashboard URL shows the counter has restarted again since it automatically fails back to the original service on dc1.
+23. Observe the dashboard service on your browser. Notice the the dashboard URL shows the counter has restarted again since it automatically fails back to the original service on dc1.
 
 
 # (Optional) Deploy Consul (dc3) on EKS Cluster and peer between dc1 as dc3.
@@ -253,20 +258,19 @@ helm install dc3 hashicorp/consul --version $VERSION --values consul-values.yaml
 
 Note: Run ```kubectl get crd``` and make sure that exportedservices.consul.hashicorp.com, peeringacceptors.consul.hashicorp.com, and peeringdialers.consul.hashicorp.com  exist. If not, you need to delete consul and redeploy.
 
-4. Create Peering Acceptor on dc1 using the provided acceptor-on-dc1-for-dc3.yaml file.
-```
-kubectl apply -f  dc3/acceptor-on-dc1-for-dc3.yaml --context dc1
-```
+4. Establish Peering connection between dc1 and dc3. This time, we can use the Consul UI.
 
-5. Copy "peering-token-dc3" secret from dc1 to dc3
-```
-kubectl get secret peering-token-dc3 --context dc1 -o yaml | kubectl apply --context $dc3 -f -
-```
-
-6. Create Peering Dialer on dc3 using the provided dialer-dc3.yaml file. Note: This step will connect Consul on dc2 to Consul on dc1 using the peering-token
-```
-kubectl apply -f  dc3/dialer-dc3.yaml --context $dc3
-```
+  - Log onto Consul UI for dc1, navigate to the Peers side tab on the left hand side.
+  - Click on **Add peer connection***
+  - Enter a name you want to represent the peer that you are connecting to (ex: dc3). 
+  - Click **Generate token**
+  - Copy the newly created token.
+  - Log onto Consul UI for dc3, navigate to the Peers side tab on the left hand side.
+  - Click on **Add peer connection***
+  - Click on **Establish peering**
+  - Enter a name you want to represent the peer that you are connecting to (ex: dc1).
+  - Paste the token and click **Add peer**
+  - Your peering connection should be established.
 
 **Peering Connection is how established between dc1 and dc3**
 
@@ -299,16 +303,22 @@ spec:
 
 10. Apply the file to dc1
 ```
-kubectl apply -f service-resolver.yaml --context dc1
+kubectl apply -f service-resolver.yaml --context $dc1
 ```
 
-11. Now let's test the failover by failing the counting service on both dc1 and dc2.
+	
+11. If you have deny-all intentions set or if ACL's are enabled (which means deny-all intentions are enabled), set intentions using intention.yaml file.
 ```
-kubectl delete -f counting.yaml --context dc1
-kubectl delete -f counting.yaml --context dc2
+kubectl apply -f intentions.yaml --context $dc3
 ```
 
-12. Back on your browser, check the dashboard UI to see the counter has reset and is running.
+12. Now let's test the failover by failing the counting service on both dc1 and dc2.
+```
+kubectl delete -f counting.yaml --context $dc1
+kubectl delete -f counting.yaml --context $dc2
+```
+
+13. Back on your browser, check the dashboard UI to see the counter has reset and is running.
 
 
 
