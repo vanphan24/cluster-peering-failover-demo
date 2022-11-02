@@ -191,28 +191,22 @@ kubectl apply -f  dialer-dc2.yaml --context $dc2
 kubectl apply -f exportedsvc-counting.yaml --context $dc2
 ```
 
-17. Apply intentions to allow dashboard in dc1 to talk to counting service in dc2
-
-```
-kubectl apply -f intentions.yaml --context $dc2
-```
-
-18. Apply service-resolver file. This service-resolver.yaml file will tell Consul how to handle failovers if the counting service fails locally. 
+17. Apply service-resolver file. This service-resolver.yaml file will tell Consul how to handle failovers if the counting service fails locally. 
 ```
 kubectl apply -f service-resolver.yaml --context $dc1
 ```
 
-19. If you have deny-all intentions set or if ACL's are enabled (which means deny-all intentions are enabled), set intentions using intention.yaml file.
+18. If you have deny-all intentions set or if ACL's are enabled (which means deny-all intentions are enabled), set intentions using intention.yaml file.
 ```
 kubectl apply -f intentions.yaml --context $dc2
 ```
 
-20. Delete the counting service on dc1
+19. Delete the counting service on dc1
 ```
 kubectl delete -f counting.yaml --context $dc1
 ```
 
-21. Observe the dashboard service on your browser. You should notice that the counter has restarted since the dashboard is connecting to different counting service instance.
+20. Observe the dashboard service on your browser. You should notice that the counter has restarted since the dashboard is connecting to different counting service instance.
 
 ![alt text](https://github.com/vanphan24/cluster-peering-failover-demo/blob/main/images/dashboard-failover.png)
 
@@ -220,13 +214,13 @@ kubectl delete -f counting.yaml --context $dc1
 ![alt text](https://github.com/vanphan24/cluster-peering-failover-demo/blob/main/images/Screen%20Shot%202022-09-13%20at%205.13.46%20PM.png "Cluster Peering Demo")
 
 
-22. Bring counting service on dc1 back up.
+21. Bring counting service on dc1 back up.
 ```
 kubectl apply -f counting.yaml --context $dc1
 ```
 
 
-23. Observe the dashboard service on your browser. Notice the the dashboard URL shows the counter has restarted again since it automatically fails back to the original service on dc1.
+22. Observe the dashboard service on your browser. Notice the the dashboard URL shows the counter has restarted again since it automatically fails back to the original service on dc1.
 
 
 # (Optional) Deploy Consul (dc3) on EKS Cluster and peer between dc1 as dc3.
