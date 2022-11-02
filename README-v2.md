@@ -133,7 +133,7 @@ kubectl apply -f counting.yaml --context $dc2
 
 You can establish the peering connections using the Consul UI or using Kubernetes CRDs. The steps using the UI are extremely easy and stright forward so we will focus on using the Kubernetes CRDs in this step.
 
-**If you prefer to use the UI to establish the peered connection, the general steps are:
+**If you prefer to use the UI to establish the peered connection, the general steps are:**
   - Log onto Consul UI for dc1, navigate to the Peers side tab on the left hand side.
   - Click on **Add peer connection***
   - Enter a name you want to represent the peer that you are connecting to. 
@@ -147,7 +147,7 @@ You can establish the peering connections using the Consul UI or using Kubernete
   - Your peering connection should be established.
 
 
-**To establish the peered connection using Kubernetes CRDs, the steps are:
+**To establish the peered connection using Kubernetes CRDs, the steps are:**
 
 10. Configure both consul datacenters to use mesh gateway for peering connections.
 
