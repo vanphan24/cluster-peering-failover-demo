@@ -14,7 +14,7 @@ We will then observe how the dashboard will failover to the counting service res
 1. You have two Kubernetes clusters available. In this demo example, we will use Azure Kubernetes Service (AKS) but it can be applied to other K8s clusters.
 
     Note: 
-    - If using AKS, you can use the Kubenet CNI or the Azure CNI. The Consul control plane and data plane will use Load Balancers to communicate between Consul datacenters.
+    - If using AKS, you can use the Kubenet CNI or the Azure CNI. The Consul control plane and data plane will use Load Balancers (via Consul mesh gateways)to communicate between Consul datacenters.
     - Since Load Balancers are used on both control plane and data plane, each datacenter can reside on different networks (VNETS, VPCs) or even different clouds (AWS, Azure GCP, private, etc). No direct network connections (ie peering connections) are required. 
     
 2. Add or update your hashicorp helm repo:
@@ -78,7 +78,7 @@ Note: Run ```kubectl get crd``` and make sure that exportedservices.consul.hashi
 If not, you need to upgrade your helm deployment:
     
     ```
-    helm upgrade dc1 ../github-main/consul-k8s/charts/consul  --version $VERSION --values ../consul-values.yaml
+    helm upgrade dc1 hashicorp/consul  --version $VERSION --values consul-values.yaml
     ```
 
 6. Deploy both dashboard and counting service on dc1
@@ -119,7 +119,7 @@ Note: Run ```kubectl get crd``` and make sure that exportedservices.consul.hashi
 If not, you need to upgrade your helm deployment:
     
     ```
-    helm upgrade dc2 ../github-main/consul-k8s/charts/consul  --version $VERSION --values ../consul-values.yaml
+    helm upgrade dc2 hashicorp/consul  --version $VERSION --values ../consul-values.yaml
     ```
 
 9. Deploy counting service on dc2. This will be the failover service instance.
@@ -131,7 +131,16 @@ kubectl apply -f counting.yaml --context $dc2
 
 # Create cluster peering connection
 
-You can establish the peering connections using the Consul UI or using Kubernetes CRDs. The steps using the UI are extremely easy and stright forward so we will focus on using the Kubernetes CRDs in this step.
+You can establish the peering connections using the Consul UI or using Kubernetes CRDs. The steps using the UI are extremely easy and straight forward so we will focus on using the Kubernetes CRDs in this section.
+
+10. If your Consul clusters are on different non-routable networks (no VPC/VPN peering), then you will need to set the Consul servers (control plane) to use mesh gateways to request/accept peering connection. Just apply the meshgw.yaml file on both Kubernetes cluster. 
+
+
+```
+kubectl apply meshgw.yaml --context $dc1
+kubectl apply meshgw.yaml --context $dc2
+```
+
 
 **If you prefer to use the UI to establish the peered connection, the general steps are:**
   - Log onto Consul UI for dc1, navigate to the Peers side tab on the left hand side.
@@ -149,20 +158,14 @@ You can establish the peering connections using the Consul UI or using Kubernete
 
 **To establish the peered connection using Kubernetes CRDs, the steps are:**
 
-10. Configure both consul datacenters to use mesh gateway for peering connections.
 
-```
-kubectl apply meshgw.yaml --context $dc1
-kubectl apply meshgw.yaml --context $dc2
-```
-
-12. Create Peering Acceptor on dc1 using the provided acceptor-for-dc2.yaml file.
+11. Create Peering Acceptor on dc1 using the provided acceptor-on-dc1-for-dc2.yaml file.
 Note: This step will establish dc1 as the Acceptor.
 ```
 kubectl apply -f  acceptor-on-dc1-for-dc2.yaml --context $dc1
 ```
 
-13. Notice this will create a CRD called peeringacceptors.
+12. Notice this will create a CRD called peeringacceptors.
 ```
 kubectl get peeringacceptors --context $dc1
 NAME   SYNCED   LAST SYNCED   AGE
@@ -174,34 +177,37 @@ Notice a secret called peering-token-dc2 is created.
 kubectl get secrets --context $dc1
 ```
 
-14. Copy peering-token-dc2 from dc1 to dc2.
+13. Copy peering-token-dc2 from dc1 to dc2.
 ```
 kubectl get secret peering-token-dc2 --context $dc1 -o yaml | kubectl apply --context $dc2 -f -
 ```
 
-15. Create Peering Dialer on dc2 using the provided dialer-dc2.yaml file.
+14. Create Peering Dialer on dc2 using the provided dialer-dc2.yaml file.
 Note: This step will establish dc2 as the Dialer and will connect Consul on dc2 to Consul on dc1 using the peering-token.
 ```
 kubectl apply -f  dialer-dc2.yaml --context $dc2
 ```
 
-16. Export counting service from dc2 to dc1.
+15. Export counting service from dc2 to dc1.
 
 ```
 kubectl apply -f exportedsvc-counting.yaml --context $dc2
 ```
 
-17. Apply service-resolver file. This service-resolver.yaml file will tell Consul how to handle failovers if the counting service fails locally. 
+16. Apply service-resolver file on dc1. This service-resolver.yaml file will tell Consul on dc1 how to handle failovers if the counting service fails locally. 
 ```
 kubectl apply -f service-resolver.yaml --context $dc1
 ```
 
-18. If you have deny-all intentions set or if ACL's are enabled (which means deny-all intentions are enabled), set intentions using intention.yaml file.
+17. If you have deny-all intentions set or if ACL's are enabled (which means deny-all intentions are enabled), set intentions using intention.yaml file.
+
+Note: The UI on Consul version 1.14 not yet recognize peers. Therefore apply intentions using the CLI, API, or CRDs.
+
 ```
 kubectl apply -f intentions.yaml --context $dc2
 ```
 
-19. Delete the counting service on dc1
+18. Delete the counting service on dc1
 ```
 kubectl delete -f counting.yaml --context $dc1
 ```
@@ -260,7 +266,7 @@ Note: Run ```kubectl get crd``` and make sure that exportedservices.consul.hashi
 	
 	If not, you need to upgrade your helm deployment:    
 	
-	```helm upgrade dc3 ../github-main/consul-k8s/charts/consul  --version $VERSION --values ../consul-values.yaml```
+	```helm upgrade dc3 hashicorp/consul --version $VERSION --values ../consul-values.yaml```
 
 4. Establish Peering connection between dc1 and dc3. This time, we can use the Consul UI.
 
