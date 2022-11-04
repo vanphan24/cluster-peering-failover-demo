@@ -64,7 +64,7 @@ helm install dc1 hashicorp/consul --version $VERSION --values consul-values.yaml
 5. Confirm Consul deployed sucessfully
 
 ```
-kubectl get pods --context dc1
+kubectl get pods --context $dc1
 NAME                                               READY   STATUS    RESTARTS   AGE
 
 dc1-consul-connect-injector-6694d44877-jvp4s       1/1     Running   0          2m
