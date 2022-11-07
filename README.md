@@ -91,11 +91,15 @@ kubectl apply -f counting.yaml --context $dc1
    You can get the dashboard UI's EXTERNAL IP address with command below. Make sure to append port :9002 to the browser URL.  
 ```   
 kubectl get service dashboard --context $dc1
-
-Ex: http://a88199784757348xxxxxxxxxx.us-east-1.elb.amazonaws.com:9002/
 ```
 
-Example:  
+Example: 
+```
+kubectl get service dashboard --context $dc1
+NAME        TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)          AGE
+dashboard   LoadBalancer   10.0.179.160   40.88.218.67  9002:32696/TCP   22s
+```
+
 
 ![alt text](https://github.com/vanphan24/cluster-peering-failover-demo/blob/main/images/dashboard-beofre.png)
 
