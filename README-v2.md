@@ -209,7 +209,13 @@ Note: The UI on Consul version 1.14 doest not yet recognize peers. Therefore app
 kubectl apply -f intentions.yaml --context $dc2
 ```
 
-18. Delete the counting service on dc1
+18. Apply the proxy-defaults on both datacenters to ensure data plane traffic goes via local mesh gateways 
+```
+kubectl apply -f proxydefaults.yaml --context $dc1
+kubectl apply -f proxydefaults.yaml --context $dc2
+```
+
+19. Delete the counting service on dc1
 ```
 kubectl delete -f counting.yaml --context $dc1
 ```
