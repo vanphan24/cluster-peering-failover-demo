@@ -203,7 +203,7 @@ kubectl apply -f service-resolver.yaml --context $dc1
 
 17. If you have deny-all intentions set or if ACL's are enabled (which means deny-all intentions are enabled), set intentions using intention.yaml file.
 
-Note: The UI on Consul version 1.14 not yet recognize peers. Therefore apply intentions using the CLI, API, or CRDs.
+Note: The UI on Consul version 1.14 doest not yet recognize peers. Therefore apply intentions using the CLI, API, or CRDs.
 
 ```
 kubectl apply -f intentions.yaml --context $dc2
