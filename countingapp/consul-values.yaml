@@ -1,0 +1,32 @@
+global:
+#  image: "hashicorp/consul:1.14.0"
+  image: "hashicorppreview/consul:1.14-dev"
+  peering:
+    enabled: true
+
+  tls:
+    enabled: true
+
+server:
+ replicas: 1
+ bootstrapExpect: 1
+ extraConfig: |
+   {
+     "log_level": "TRACE"
+   }
+
+connectInject:
+  enabled: true
+
+meshGateway:
+  enabled: true
+  replicas: 1
+
+controller:
+  enabled: true
+
+ui:
+  enabled: true
+  service:
+    enabled: true
+    type: LoadBalancer
