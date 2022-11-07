@@ -48,7 +48,7 @@ cd cluster-peering-failover-demo/countingapp
 ```
 export dc1=<your-kubernetes context-for-dc1>
 export dc2=<your-kubernetes context-for-dc2>
-export VERSION=1.0.0-beta3
+export VERSION=1.0.0
 ```
 
 4. Set context and deploy Consul on dc1
