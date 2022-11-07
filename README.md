@@ -118,14 +118,14 @@ dashboard   LoadBalancer   10.0.179.160   40.88.218.67  9002:32696/TCP   22s
 kubectl config use-context $dc2
 ```
 ```
-helm install dc2 hashicorp/consul --version $VERSION --values ../consul-values.yaml --set global.datacenter=dc2
+helm install dc2 hashicorp/consul --version $VERSION --values consul-values.yaml --set global.datacenter=dc2
 ```
 
 Note: Run ```kubectl get crd``` and make sure that exportedservices.consul.hashicorp.com, peeringacceptors.consul.hashicorp.com, and peeringdialers.consul.hashicorp.com  exist.    
 If not, you need to upgrade your helm deployment:
     
     ```
-    helm upgrade dc2 hashicorp/consul  --version $VERSION --values ../consul-values.yaml
+    helm upgrade dc2 hashicorp/consul  --version $VERSION --values consul-values.yaml
     ```
 
 9. Deploy counting service on dc2. This will be the failover service instance.
