@@ -139,8 +139,8 @@ You can establish the peering connections using the Consul UI or using Kubernete
 
 
 ```
-kubectl apply meshgw.yaml --context $dc1
-kubectl apply meshgw.yaml --context $dc2
+kubectl apply -f meshgw.yaml --context $dc1
+kubectl apply -f meshgw.yaml --context $dc2
 ```
 
 
