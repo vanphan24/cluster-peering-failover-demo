@@ -1,0 +1,14 @@
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceResolver
+metadata:
+  name: counting
+spec:
+  connectTimeout: 15s
+  failover:
+    '*':
+      targets:
+        - peer: 'dc2'
+        - peer: 'dc3'
+#          service: 'counting'
+#          namespace: 'default'
+#          datacenters: 'dc2'
