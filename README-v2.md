@@ -91,6 +91,8 @@ kubectl apply -f counting.yaml --context $dc1
    You can get the dashboard UI's EXTERNAL IP address with command below. Make sure to append port :9002 to the browser URL.  
 ```   
 kubectl get service dashboard --context $dc1
+
+Ex: http://a88199784757348xxxxxxxxxx.us-east-1.elb.amazonaws.com:9002/
 ```
 
 Example:  
