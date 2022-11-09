@@ -33,7 +33,7 @@ spec:
         'consul.hashicorp.com/transparent-proxy': 'false'
         'consul.hashicorp.com/connect-service-upstreams': 'counting:9001'
 #        'consul.hashicorp.com/connect-service-upstreams': 'counting.svc.dc2.peer:9001'
- 
+     
       labels:
         app: dashboard
     spec:

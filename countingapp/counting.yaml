@@ -39,3 +39,4 @@ spec:
         image: hashicorp/counting-service:0.0.2
         ports:
         - containerPort: 9001
+

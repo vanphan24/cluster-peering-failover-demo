@@ -1,7 +1,12 @@
 global:
 #  image: "hashicorp/consul:1.14.0"
+  image: "hashicorppreview/consul:1.14-dev"
   peering:
     enabled: true
+
+  tls:
+    enabled: true
+
 server:
  replicas: 1
  bootstrapExpect: 1
@@ -9,6 +14,7 @@ server:
    {
      "log_level": "TRACE"
    }
+
 connectInject:
   enabled: true
 

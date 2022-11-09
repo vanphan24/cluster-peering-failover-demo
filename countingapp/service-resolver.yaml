@@ -8,6 +8,7 @@ spec:
     '*':
       targets:
         - peer: 'dc2'
+        - peer: 'dc3'
 #          service: 'counting'
 #          namespace: 'default'
 #          datacenters: 'dc2'

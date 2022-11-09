@@ -1,0 +1,13 @@
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: counting-allow-dc1
+spec:
+  destination:
+    name: counting
+  sources:
+   - name: dashboard
+     action: allow
+     peer: dc1 
+
+
