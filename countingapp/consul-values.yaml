@@ -8,12 +8,12 @@ global:
     enabled: true
 
 server:
- replicas: 1
- bootstrapExpect: 1
- extraConfig: |
-   {
-     "log_level": "TRACE"
-   }
+  replicas: 1
+  bootstrapExpect: 1
+  extraConfig: |
+    {
+      "log_level": "TRACE"
+    }
 
 connectInject:
   enabled: true
