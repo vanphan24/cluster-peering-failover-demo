@@ -200,6 +200,9 @@ kubectl apply -f exportedsvc-counting.yaml --context $dc2
 ```
 
 16. Apply service-resolver file on dc1. This service-resolver.yaml file will tell Consul on dc1 how to handle failovers if the counting service fails locally. 
+
+Note: Make sure the name of the peer in the service-resolver file matches the name to gave for each peer when you established peering (either in the UI or using CRD acceptor and dialer files).
+
 ```
 kubectl apply -f service-resolver.yaml --context $dc1
 ```
@@ -279,7 +282,14 @@ Note: Run ```kubectl get crd``` and make sure that exportedservices.consul.hashi
 	
 	```helm upgrade $dc3 hashicorp/consul --version $VERSION --values consul-values.yaml```
 
-4. Establish Peering connection between dc1 and dc3. This time, we can use the Consul UI.
+5. A
+
+```
+kubectl apply -f meshgw.yaml --context $dc1
+```
+
+
+5. Establish Peering connection between dc1 and dc3. This time, we can use the Consul UI.
 
   - Log onto Consul UI for dc1, navigate to the Peers side tab on the left hand side.
   - Click on **Add peer connection***
@@ -295,6 +305,12 @@ Note: Run ```kubectl get crd``` and make sure that exportedservices.consul.hashi
 
 **Peering Connection is how established between dc1 and dc3**
 
+5. Configure Consul to use mesh gateway to establish the cluster peering.
+
+```
+kubectl apply -f meshgw.yaml --context $dc3
+```
+
 7. Deploy counting service on dc3.
 ```
 kubectl apply -f counting.yaml --context $dc3
@@ -304,10 +320,10 @@ kubectl apply -f counting.yaml --context $dc3
 kubectl apply -f exportedsvc-counting.yaml --context $dc3
 ```
 
-9. Update the service-resolver and add dc3 as one of the failover targets.  
-   - Edit the service-resolver.yaml file by adding ```- peer: 'dc3'``` as one of the targets.
+9. Edit the service-resolver.yaml file by adding ```- peer: 'dc3'``` as one of the targets. 
 
-It should look like this:
+
+It should look like below. Make sure the name of the peer in the service-resolver file matches the name to gave for each peer when you established peering (either in the UI or using CRD acceptor and dialer files).
 ```
 apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceResolver
