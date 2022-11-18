@@ -73,11 +73,11 @@ dc1-consul-server-0                                1/1     Running   0          
 dc1-consul-webhook-cert-manager-669bb6d774-sb5lz   1/1     Running   0          2m
 ```  
 Note: Run ```kubectl get crd``` and make sure that exportedservices.consul.hashicorp.com, peeringacceptors.consul.hashicorp.com, and peeringdialers.consul.hashicorp.com  exist.    
-If not, you need to upgrade your helm deployment:
+If not, you need to upgrade your helm deployment:  
     
-    ```
-    helm upgrade $dc1 hashicorp/consul  --version $VERSION --values consul-values.yaml
-    ```
+```
+helm upgrade $dc2 hashicorp/consul  --version $VERSION --values consul-values.yaml
+```
 
 6. Deploy both dashboard and counting service on dc1
 ```
@@ -120,11 +120,11 @@ helm install $dc2 hashicorp/consul --version $VERSION --values consul-values.yam
 ```
 
 Note: Run ```kubectl get crd``` and make sure that exportedservices.consul.hashicorp.com, peeringacceptors.consul.hashicorp.com, and peeringdialers.consul.hashicorp.com  exist.    
-If not, you need to upgrade your helm deployment:
-    
-    ```
-    helm upgrade $dc2 hashicorp/consul  --version $VERSION --values consul-values.yaml
-    ```
+If not, you need to upgrade your helm deployment:  
+
+```
+helm upgrade $dc2 hashicorp/consul  --version $VERSION --values consul-values.yaml
+```
 
 9. Deploy counting service on dc2. This will be the failover service instance.
 
