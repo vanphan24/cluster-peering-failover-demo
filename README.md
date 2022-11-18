@@ -186,7 +186,8 @@ kubectl get secrets --context $dc1
 kubectl get secret peering-token-dc2 --context $dc1 -o yaml | kubectl apply --context $dc2 -f -
 ```
 
-14. Create Peering Dialer on dc2 using the provided dialer-dc2.yaml file.
+14. Create Peering Dialer on dc2 using the provided dialer-dc2.yaml file.  
+
 Note: This step will establish dc2 as the Dialer and will connect Consul on dc2 to Consul on dc1 using the peering-token.
 ```
 kubectl apply -f  dialer-dc2.yaml --context $dc2
@@ -203,9 +204,9 @@ kubectl apply -f exportedsvc-counting.yaml --context $dc2
 kubectl apply -f service-resolver.yaml --context $dc1
 ```
 
-17. If you have deny-all intentions set or if ACL's are enabled (which means deny-all intentions are enabled), set intentions using intention.yaml file.
+17. If you have deny-all intentions set or if ACL's are enabled (which means deny-all intentions are enabled), set intentions using intention.yaml file.  
 
-Note: The UI on Consul version 1.14 doest not yet recognize peers. Therefore apply intentions using the CLI, API, or CRDs.
+Note: The UI on Consul version 1.14 does not yet recognize peers for Intention creation. Therefore apply intentions using the CLI, API, or CRDs.
 
 ```
 kubectl apply -f intentions.yaml --context $dc2
