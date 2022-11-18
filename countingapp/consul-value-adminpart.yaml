@@ -1,0 +1,52 @@
+global:
+#  image: "hashicorp/consul:1.14.0"
+  image: "hashicorp/consul-enterprise:1.14.0-ent"
+  peering:
+    enabled: true
+
+  tls:
+    enabled: true
+
+  adminPartitions:
+    enabled: true
+    name: "default"
+    # name above is the partition name for servers to reside 	
+    service:
+      annotations: null
+  enableConsulNamespaces: true
+
+  enterpriseLicense:
+    secretName: license
+    secretKey: key
+
+
+
+server:
+  replicas: 1
+  bootstrapExpect: 1
+  extraConfig: |
+    {
+      "log_level": "TRACE"
+    }
+
+
+
+connectInject:
+  enabled: true
+  consulNamespaces:
+    mirroringK8S: true
+  
+
+
+meshGateway:
+  enabled: true
+  replicas: 1
+
+controller:
+  enabled: true
+
+ui:
+  enabled: true
+  service:
+    enabled: true
+    type: LoadBalancer
