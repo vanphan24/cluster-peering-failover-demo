@@ -58,7 +58,7 @@ kubectl config use-context $dc1
 ``` 
 
 ```
-helm install dc1 hashicorp/consul --version $VERSION --values consul-values.yaml                                  
+helm install $dc1 hashicorp/consul --version $VERSION --values consul-values.yaml                                  
 ```
 
 5. Confirm Consul deployed sucessfully
@@ -268,7 +268,7 @@ export dc3=<your EKS cluster context>
 kubectl config use-context $dc3
 ``` 
 ```
-helm install dc3 hashicorp/consul --version $VERSION --values consul-values.yaml --set global.datacenter=dc3
+helm install $dc3 hashicorp/consul --version $VERSION --values consul-values.yaml --set global.datacenter=dc3
 ```
   
 
@@ -276,7 +276,7 @@ Note: Run ```kubectl get crd``` and make sure that exportedservices.consul.hashi
 	
 	If not, you need to upgrade your helm deployment:    
 	
-	```helm upgrade dc3 hashicorp/consul --version $VERSION --values consul-values.yaml```
+	```helm upgrade $dc3 hashicorp/consul --version $VERSION --values consul-values.yaml```
 
 4. Establish Peering connection between dc1 and dc3. This time, we can use the Consul UI.
 
