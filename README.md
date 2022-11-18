@@ -76,7 +76,7 @@ Note: Run ```kubectl get crd``` and make sure that exportedservices.consul.hashi
 If not, you need to upgrade your helm deployment:  
     
 ```
-helm upgrade $dc2 hashicorp/consul  --version $VERSION --values consul-values.yaml
+helm upgrade $dc1 hashicorp/consul  --version $VERSION --values consul-values.yaml
 ```
 
 6. Deploy both dashboard and counting service on dc1
