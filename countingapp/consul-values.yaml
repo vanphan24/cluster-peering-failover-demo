@@ -1,6 +1,6 @@
 global:
-#  image: "hashicorp/consul:1.14.0"
-  image: "hashicorppreview/consul:1.14-dev"
+  image: "hashicorp/consul:1.14.0"
+#  image: "hashicorppreview/consul:1.14-dev"
   peering:
     enabled: true
 
