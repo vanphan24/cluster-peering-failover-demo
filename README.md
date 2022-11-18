@@ -68,8 +68,6 @@ kubectl get pods --context $dc1
 NAME                                               READY   STATUS    RESTARTS   AGE
 
 dc1-consul-connect-injector-6694d44877-jvp4s       1/1     Running   0          2m
-dc1-consul-connect-injector-6694d44877-t65vh       1/1     Running   0          2m
-dc1-consul-controller-8548797965-rtq6d             1/1     Running   0          2m
 dc1-consul-mesh-gateway-747c58b75c-s68n7           2/2     Running   0          2m
 dc1-consul-server-0                                1/1     Running   0          2m
 dc1-consul-webhook-cert-manager-669bb6d774-sb5lz   1/1     Running   0          2m
