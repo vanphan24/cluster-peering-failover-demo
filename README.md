@@ -217,8 +217,8 @@ kubectl apply -f intentions.yaml --context $dc2
 
 18. Apply the proxy-defaults on both datacenters to ensure data plane traffic goes via local mesh gateways 
 ```
-kubectl apply -f proxydefaults.yaml --context $dc1
-kubectl apply -f proxydefaults.yaml --context $dc2
+kubectl apply -f proxydefault.yaml --context $dc1
+kubectl apply -f proxydefault.yaml --context $dc2
 ```
 
 19. Delete the counting service on dc1
