@@ -215,7 +215,7 @@ Note: The UI on Consul version 1.14 does not yet recognize peers for Intention c
 kubectl apply -f intentions.yaml --context $dc2
 ```
 
-18. Apply the proxy-defaults on both datacenters to ensure data plane traffic goes via local mesh gateways 
+18. Apply the proxy-defaults on both datacenters to ensure data plane traffic between clusters goes via local mesh gateways 
 ```
 kubectl apply -f proxydefault.yaml --context $dc1
 kubectl apply -f proxydefault.yaml --context $dc2
